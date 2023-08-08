@@ -176,29 +176,15 @@ def finish(
             wandb.finish()
 
 
-def bring_colon_dataset_csv(datatype, stage=None):
+def bring_colon_dataset_csv(stage=None):
     # Directories
-    path = f"/path/to/LJC/data/colon_tma/{datatype}/"
-    # path = "/path/to/LJC/data/colon_tma/COLON_PATCHES_1024/"
+    path =  "dataset/colon/KBSMC_colon_tma_cancer_grading_1024/"
+
     if stage != "fit" and stage is not None:
         return pd.read_csv(path + "test.csv")
     df_train = pd.read_csv(path + "train.csv")
     df_val = pd.read_csv(path + "valid.csv")
     return df_train, df_val
-
-
-def bring_dataset_colontest2_csv(stage=None):
-    # Directories
-    # path = "/path/to/LJC/data/colon_45WSIs_1144_08_step05_05/"
-
-    # if stage != "fit" and stage is not None:
-    #     return pd.read_csv(f"{path}test.csv")
-    # df_train = pd.read_csv(f"{path}train.csv")
-    # df_val = pd.read_csv(f"{path}valid.csv")
-    # return df_train, df_val
-
-    data_path = pd.read_csv('/path/to/LJC/data/colon_45WSIs_1144_08_step05_05/colon_test2_all_data.csv')
-    return data_path
 
 
 def bring_gastric_dataset_csv(stage=None):
@@ -209,39 +195,6 @@ def bring_gastric_dataset_csv(stage=None):
         return pd.read_csv(f"{path}class4_step10_ds_test.csv")
     df_train = pd.read_csv(f"{path}class4_step05_ds_train.csv")
     df_val = pd.read_csv(f"{path}class4_step10_ds_valid.csv")
-    return df_train, df_val
-
-
-def bring_gastric_dataset_csv2(stage=None):
-    # Directories
-    path = "/path/to/LJC/data/gastric/"
-
-    if stage != "fit" and stage is not None:
-        return pd.read_csv(f"{path}class4_step10_ds_test2.csv")
-    df_train = pd.read_csv(f"{path}class4_step05_ds_train2.csv")
-    df_val = pd.read_csv(f"{path}class4_step10_ds_valid2.csv")
-    return df_train, df_val
-
-
-def bring_agcc_dataset_csv(stage=None):
-    # Directories
-    path = f"/data1/ljc/AGGC22/"
-
-    if stage != "fit" and stage is not None:
-        return pd.read_csv(f"{path}test.csv")
-    df_train = pd.read_csv(f"{path}train.csv")
-    df_val = pd.read_csv(f"{path}valid.csv")
-    return df_train, df_val
-
-
-def bring_agcc_dataset_csv(stage=None):
-    # Directories
-    path = f"/data1/ljc/AGGC22/"
-
-    if stage != "fit" and stage is not None:
-        return pd.read_csv(f"{path}test.csv")
-    df_train = pd.read_csv(f"{path}train.csv")
-    df_val = pd.read_csv(f"{path}valid.csv")
     return df_train, df_val
 
 

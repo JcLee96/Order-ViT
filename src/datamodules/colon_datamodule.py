@@ -122,11 +122,9 @@ class ColonDataModule(LightningDataModule):
             self.valid_dataset = ColonDataset(valid_df, self.test_transform)
 
         else:
-            train_df, valid_df = bring_colon_dataset_csv(
-                datatype="COLON_MANUAL_512", stage=None
-            )
+            train_df, valid_df = bring_colon_dataset_csv(stage=None)
             # self.test_dataset = ColonDataset(valid_df, self.test_transform)
-            test_df = bring_colon_dataset_csv(datatype="COLON_MANUAL_512", stage="test")
+            test_df = bring_colon_dataset_csv(stage="test")
             self.test_dataset = ColonDataset(test_df, self.test_transform)
             # test_df2 = bring_dataset_colontest2_csv(stage="test")
             # self.test_dataset = ColonDataset(
@@ -162,17 +160,3 @@ class ColonDataModule(LightningDataModule):
             drop_last=self.hparams.drop_last,
             shuffle=False,
         )
-
-def prepare_colon_wsi_patch():
-    def load_data_info_from_list(data_dir):
-
-        file_list = glob.glob(f"{data_dir}/*/*/*.png")
-        label_list = [
-            int(file_path.split("_")[-1].split(".")[0]) - 1 for file_path in file_list
-        ]
-
-        return list(zip(file_list, label_list))
-
-    data_dir = "/path/to/LJC/data/colon_45WSIs_1144_08_step05_05"
-
-    return load_data_info_from_list(data_dir)

@@ -77,6 +77,6 @@ def prepare_colon_wsi_patch():
 
         return list(zip(file_list, label_list))
 
-    data_dir = "/data2/lju/colon/test_2/colon_45WSIs_1144_08_step05_05"
+    data_dir = "dataset/colon/KBSMC_colon_45wsis_cancer_grading_512 (Test 2)/"
 
     return load_data_info_from_list(data_dir)
