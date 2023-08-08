@@ -1,0 +1,9 @@
+_target_: src.models.save_features_module.SaveFeaturesLitModule
+
+name: vit_base_r50_s16_384 # vit_large_r50_s32_384 or vit_base_r50_s16_384
+lr: 1e-4
+pretrained: True
+module_type: 'savefeatures'
+seed: 42
+implementation_model: False
+class_cnt: 4

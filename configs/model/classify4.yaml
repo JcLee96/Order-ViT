@@ -1,0 +1,20 @@
+_target_: src.models.classify4_module.Classify4LitModule
+
+name: vit_base_r50_s16_384
+# densenet121 or efficientnet_b0 or resnet50 or vit_large_r50_s32_384 or deit3_large_patch16_384 or twins_svt_large or vit_large_patch32_384 or vit_large_patch32_384 or vit_large_r50_s32_224
+lr: 1e-4
+weight_decay: 0.0005
+t_max: 10
+min_lr: 1e-6
+T_0: 20
+T_mult: 1
+eta_min: 1e-5
+pretrained: True
+scheduler: 'CosineAnnealingLR'
+factor: 0.5
+patience: 3
+eps: 1e-8
+loss_weight: 0.15
+module_type: 'classify4'
+implementation_model: False
+class_cnt: 4

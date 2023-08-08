@@ -1,0 +1,36 @@
+# @package _global_
+
+# to execute this experiment run:
+# python run.py experiment=example
+
+defaults:
+  - override /callbacks: default.yaml
+  - override /logger: null
+  - override /mode: exp.yaml
+  - override /trainer: default.yaml
+  - override /model: colon.yaml
+  - override /datamodule: colon.yaml
+
+# all parameters below will be merged with parameters from default configurations set above
+# this allows you to overwrite only specified parameters
+
+# name of the run determines folder name in logs
+# can also be accessed by loggers
+name: "colon"
+
+seed: 42
+
+trainer:
+  min_epochs: 1
+  max_epochs: 20
+  gradient_clip_val: 0.5
+
+model:
+  lr: 0.002
+
+datamodule:
+  batch_size: 64
+
+logger:
+  wandb:
+    tags: ["colon", "vit_base_patch16_224"]

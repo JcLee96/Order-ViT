@@ -1,0 +1,21 @@
+_target_: pytorch_lightning.Trainer
+
+#gpus: "2,3"
+
+min_epochs: 1
+max_epochs: 50 # if gastric 경우 30 else 50
+precision: 16
+#plugins:
+#  _target_: pytorch_lightning.plugins.DDPPlugin
+#  find_unused_parameters: True
+
+strategy: 'ddp'
+accelerator: 'gpu'
+devices: '0,1'
+# fast_dev_run: True
+num_sanity_val_steps: 0
+# number of validation steps to execute at the beginning of the training
+
+# ckpt path
+resume_from_checkpoint: null
+deterministic: True

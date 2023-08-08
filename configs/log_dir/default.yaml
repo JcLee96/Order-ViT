@@ -1,0 +1,8 @@
+# @package _global_
+
+hydra:
+  run:
+    dir: scripts/logs/experiments/runs/${datamodule.data_name}/${model.module_type}/${model.name}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+  sweep:
+    dir: scripts/logs/experiments/multiruns/${datamodule.data_name}/${model.module_type}/${model.name}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    subdir: ${hydra.job.num}

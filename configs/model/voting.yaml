@@ -1,0 +1,18 @@
+_target_: src.models.voting_module.VotingLitModule
+
+name: vit_base_r50_s16_384
+
+lr: 1e-4
+pretrained: True
+scheduler: 'ReduceLROnPlateau'
+threshold: 0.1
+num_sample: 10
+vote_score_way: 'relative'  # absolute   relative
+key: 'sub_prob' # ent prob sub_prob
+sampling: 'trust' # mRMR trust
+decide_by_total_probs: False
+weighted_sum: True
+module_type: 'voting'
+seed: 42
+implementation_model: False
+class_cnt: 4

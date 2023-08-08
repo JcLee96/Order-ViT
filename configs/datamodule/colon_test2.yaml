@@ -1,0 +1,10 @@
+_target_: src.datamodules.colon_test2_datamodule.ColonTestDataModule
+
+data_dir: ${data_dir} # data_dir is specified in config.yaml
+batch_size: 8
+num_workers: 0
+pin_memory: True
+img_size: 384
+drop_last: False
+data_name: 'colon'
+data_ratio: 1.0

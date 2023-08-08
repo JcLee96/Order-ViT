@@ -1,0 +1,12 @@
+rich_progress_bar:
+  _target_: pytorch_lightning.callbacks.RichProgressBar
+  theme:
+    _target_: pytorch_lightning.callbacks.progress.rich_progress.RichProgressBarTheme
+    description: 'green_yellow'
+    progress_bar: 'green1'
+    progress_bar_finished: 'green1'
+    progress_bar_pulse: '#6206E0'
+    batch_progress: 'green_yellow'
+    time: 'grey82'
+    processing_speed: 'grey82'
+    metrics: 'grey82'

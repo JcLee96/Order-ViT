@@ -1,0 +1,21 @@
+_target_: src.models.classifycompare_module.ClassifyCompareLitModule
+
+name: vit_large_r50_s32_384
+
+lr: 1.0e-4
+weight_decay: 0.0005
+t_max: 10
+min_lr: 1e-6
+T_0: 20
+T_mult: 1
+threshold: 0.1
+eta_min: 1e-5
+pretrained: True
+scheduler: 'CosineAnnealingLR'
+factor: 0.5
+patience: 3
+eps: 1e-8
+loss_weight: 0.15
+module_type: 'classifycompare'
+implementation_model: False
+class_cnt: 4

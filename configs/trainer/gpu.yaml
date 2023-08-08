@@ -1,0 +1,18 @@
+_target_: pytorch_lightning.Trainer
+accelerator: gpu
+devices: [1]
+min_epochs: 1
+max_epochs: 100
+precision: 16
+#plugins:
+#  _target_: pytorch_lightning.plugins.DDPPlugin
+#  find_unused_parameters: True
+
+# fast_dev_run: True
+num_sanity_val_steps: 2
+# number of validation steps to execute at the beginning of the training
+
+
+# ckpt path
+resume_from_checkpoint: null
+deterministic: True
