@@ -15,7 +15,7 @@
 
 ## Description
 
-# ![Order-ViT](./dataset/model_architecture.png)
+![Order-ViT](/new_model.png)
 
 
 ## Datasets
