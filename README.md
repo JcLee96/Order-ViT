@@ -17,6 +17,8 @@
 
 ![Order-ViT](/new_model.png)
 
+The overall model architecture is as follows. Categorical classification and sequential relationship classification problems are performed simultaneously.
+
 
 ## Datasets
 
