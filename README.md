@@ -36,7 +36,7 @@ Install dependencies
 
 ```bash
 # clone project
-git clone https://github.com/Leejucheon96/ICCV_2023_CVAMD-Order-ViT-.git
+git clone https://github.com/Leejucheon96/Order-ViT.git
 
 
 # [OPTIONAL] create conda environment
