@@ -35,7 +35,7 @@ Install dependencies
 
 ```bash
 # clone project
-git clone https://github.com/Leejucheon96/Order-ViT.git
+git clone https://github.com/JcLee96/Order-ViT.git
 
 
 # [OPTIONAL] create conda environment
