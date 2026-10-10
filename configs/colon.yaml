@@ -1,0 +1,35 @@
+# Order-ViT on the KBSMC colon TMA dataset (paper setting).
+seed: 42
+output_dir: outputs/colon
+
+data:
+  image_root: data/colon_tma            # KBSMC_colon_tma_cancer_grading_1024
+  split_dir: splits/colon_tma           # train.csv / valid.csv / test.csv (path relative to image_root, class)
+  test2_root: data/colon_test2          # KBSMC_colon_45wsis_cancer_grading_512 (Test II)
+  img_size: 384
+  batch_size: 16
+  num_workers: 8
+
+model:
+  backbone: vit_base_r50_s16_384
+  num_classes: 4
+  pretrained: true
+
+train:
+  epochs: 50
+  lr: 1.0e-4
+  weight_decay: 5.0e-4
+  scheduler: CosineAnnealingWarmRestarts
+  t_0: 20
+  t_max: 10
+  min_lr: 1.0e-6
+  order_weight: 1.0                     # weight of the order (pair comparison) loss
+  amp: true
+
+voting:
+  key: sub_prob                         # sub_prob | prob | ent
+  threshold: 0.09534
+  num_sample: 10                        # references per class
+  min_prob: 0.9                         # "trust" references: correct and confident
+  vote_score_way: relative              # relative | absolute
+  combine: weighted_sum                 # weighted_sum | total_probs | vote

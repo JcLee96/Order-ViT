@@ -1,76 +1,114 @@
-# Order-ViT
-
 <div align="center">
 
 # Order-ViT: Order Learning Vision Transformer for Cancer Classification in Pathology Images
 
+[![Paper](https://img.shields.io/badge/Paper-ICCV_2023_Workshop_(CVAMD)-B31B1B.svg)](https://openaccess.thecvf.com/content/ICCV2023W/CVAMD/html/Lee_Order-ViT_Order_Learning_Vision_Transformer_for_Cancer_Classification_in_Pathology_ICCVW_2023_paper.html)
+[![Conference](https://img.shields.io/badge/Conference-CVAMD_@_ICCV_2023-4b44ce.svg)](https://openaccess.thecvf.com/ICCV2023_workshops/CVAMD)
 <a href="https://pytorch.org/get-started/locally/"><img alt="PyTorch" src="https://img.shields.io/badge/PyTorch-ee4c2c?logo=pytorch&logoColor=white"></a>
-<a href="https://pytorchlightning.ai/"><img alt="Lightning" src="https://img.shields.io/badge/-Lightning-792ee5?logo=pytorchlightning&logoColor=white"></a>
-<a href="https://hydra.cc/"><img alt="Config: Hydra" src="https://img.shields.io/badge/Config-Hydra-89b8cd"></a>
-<a href="https://github.com/ashleve/lightning-hydra-template"><img alt="Template" src="https://img.shields.io/badge/-Lightning--Hydra--Template-017F2F?style=flat&logo=github&labelColor=gray"></a><br>
-[![Paper](http://img.shields.io/badge/paper-arxiv.1001.2234-B31B1B.svg)](https://openaccess.thecvf.com/content/ICCV2023W/CVAMD/html/Lee_Order-ViT_Order_Learning_Vision_Transformer_for_Cancer_Classification_in_Pathology_ICCVW_2023_paper.html)
-[![Conference](http://img.shields.io/badge/ICCV(Workshoh)_CVAMD_Conference-2023-4b44ce.svg)](https://cvamd2023.github.io/)
+<a href="https://github.com/huggingface/pytorch-image-models"><img alt="timm" src="https://img.shields.io/badge/timm-backbone-yellow"></a>
+
 </div>
 
-## Description
+Order-ViT grades colon cancer in pathology images by jointly learning **categorical classification** (benign / well / moderately / poorly differentiated) and **order learning** (whether one image has a higher, equal or lower grade than another), and at test time re-decides uncertain predictions by voting over comparisons with confident reference images.
 
-![Order-ViT](/new_model.png)
+![Order-ViT](assets/order_vit.png)
 
-The overall model architecture is as follows. Categorical classification and sequential relationship classification problems are performed simultaneously.
+## Method in one paragraph
 
+A ViT-R50 hybrid backbone (`vit_base_r50_s16_384`, timm) produces one feature per image. A class head (3-layer MLP) predicts the grade. Within each batch the images are randomly paired; an order head takes the concatenated pair features and predicts `>`, `=` or `<` of the grades. Loss = CE(grade) + `order_weight` x CE(order). At inference (`--voting`), samples whose top-1 minus top-2 probability is below a threshold are compared with `num_sample` "trusted" reference images per class (training images classified correctly with probability > 0.9); comparison results are turned into class votes and combined with the classifier probabilities by an entropy-weighted sum.
 
-## Datasets
+## Project structure
 
-All the models in this project were evaluated on the following datasets:
+```
+Order-ViT/
+├── README.md
+├── requirements.txt
+├── configs/
+│   └── colon.yaml          # all settings: data paths, backbone, optimizer, voting
+├── splits/
+│   └── colon_tma/          # train/valid/test CSVs (path relative to the image folder, class)
+├── src/
+│   ├── config.py           # YAML loading + `key.sub=value` overrides
+│   ├── data.py             # dataset, augmentation, data loaders
+│   ├── model.py            # Order-ViT model, order labels, joint loss, checkpoint loading
+│   └── engine.py           # train/eval loops, metrics, reference bank and voting
+├── train.py                # training entry point
+├── test.py                 # evaluation entry point (optionally with voting)
+├── tests/
+│   └── test_smoke.py       # end-to-end test on random dummy data
+└── assets/
+    └── order_vit.png       # model figure
+```
 
-- [Colon_KBSMC](https://github.com/QuIIL/KBSMC_colon_cancer_grading_dataset) (Colon TMA from Kangbuk Samsung Hospital)
-- [Colon_KBSMC](https://github.com/QuIIL/KBSMC_colon_cancer_grading_dataset) (Colon WSI from Kangbuk Samsung Hospital)
-- [Gastric_KBSMC](-) (Gastric from Kangbuk Samsung Hospital)
+## Environment
 
-
-
-## How to run
-
-Install dependencies
+Tested with Python 3.9, PyTorch 2.5.1 (CUDA 12.1), timm 1.0.30.
 
 ```bash
-# clone project
 git clone https://github.com/JcLee96/Order-ViT.git
-
-
-# [OPTIONAL] create conda environment
-conda env create -f order_vit_environment.yml
-conda activate order_vit_environment
-
-#We install Pytorch version 1.10.0 with CUDA 11.4
+cd Order-ViT
+conda create -n order_vit python=3.9 -y
+conda activate order_vit
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+pip install -r requirements.txt
 ```
 
-## Repository
-```
-/config: data and model parameter setting
-/scripts: .sh file
-/src: data load and augmentation, model code
-```
- 
-## How to training for Only Categorical classification and Order-learning
-```
-## Only Categorical classification
-# model.name = timm model name & ../train_test: Code for validating different datasets using the best model
-Using /scripts/classification.sh
+## Dataset
 
-## Order-learning
-# ../train_test: Code for validating different datasets using the best model
-Using /scripts/order_learning.sh
+Colon cancer grading datasets from Kangbuk Samsung Hospital (KBSMC): <https://github.com/QuIIL/KBSMC_colon_cancer_grading_dataset>
 
-## feature extracture for voting (Using mamory bank)
-# Feature vectors for voting through the following paths are selected in advance.: ../src/models/save_features_module.py
-Using /scripts/features.sh
+- `KBSMC_colon_tma_cancer_grading_1024` - training, validation and Test I
+- `KBSMC_colon_45wsis_cancer_grading_512` - Test II (independent WSI patches)
 
-## voting
-# sub_prob: First prob - Second prob
-# trust: Meaning validated datasets described in the paper
-(How to correctly predict among feature vectors extracted through features.sh and select a picture vector with a probability of 0.9 or higher at the time)
-Using /scripts/voting.sh
+Place them under `data/` (or change the paths in `configs/colon.yaml`):
+
+```
+data/
+├── colon_tma/              # content of KBSMC_colon_tma_cancer_grading_1024
+│   ├── 1010711/
+│   │   ├── 91109_17705_3.jpg
+│   │   └── ...
+│   └── ...
+└── colon_test2/            # content of KBSMC_colon_45wsis_cancer_grading_512
+    └── <wsi>/<region>/<name>_<grade 1-4>.png
 ```
 
+Labels: 0 benign, 1 well, 2 moderately, 3 poorly differentiated. Training/validation/Test I membership is defined by `splits/colon_tma/*.csv`; Test II labels are read from the file-name suffix.
 
+## Usage
+
+Train (best checkpoint by validation accuracy is saved to `outputs/colon/best.pt`, then evaluated on Test I):
+
+```bash
+python train.py --config configs/colon.yaml
+# any setting can be overridden, e.g.
+python train.py train.epochs=30 data.batch_size=8 output_dir=outputs/run1
+```
+
+Test:
+
+```bash
+# plain classification on Test I
+python test.py --ckpt outputs/colon/best.pt
+# with order-based voting on Test II
+python test.py --ckpt outputs/colon/best.pt --split test2 --voting voting.num_sample=10
+```
+
+Reported metrics: accuracy, macro F1, quadratic weighted kappa and the confusion matrix (voting also reports the accuracy before voting and the number of changed predictions).
+
+## Smoke test
+
+Builds a tiny random dataset, trains a small ViT for one epoch, evaluates, runs voting and reloads the checkpoint (no download needed):
+
+```bash
+python tests/test_smoke.py      # or: pytest tests
+```
+
+## Citation
+
+If you use this code, please cite:
+
+> Order-ViT: Order Learning Vision Transformer for Cancer Classification in Pathology Images. ICCV 2023 Workshops (CVAMD). [[paper]](https://openaccess.thecvf.com/content/ICCV2023W/CVAMD/html/Lee_Order-ViT_Order_Learning_Vision_Transformer_for_Cancer_Classification_in_Pathology_ICCVW_2023_paper.html)
+
+## License
+Released under the [MIT License](LICENSE).

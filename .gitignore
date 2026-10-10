@@ -1,0 +1,24 @@
+# data and run outputs
+data/
+logs/
+outputs/
+wandb/
+*.npy
+
+# python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+
+# editors / OS
+.idea/
+.vscode/
+.~lock*
+.DS_Store
+Thumbs.db
+
+# environment
+.env
+.venv/
